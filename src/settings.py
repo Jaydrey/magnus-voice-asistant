@@ -12,6 +12,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 PORT = int(os.getenv("PORT", "8000"))
 
+ALLOWED_HOST = os.getenv("ALLOWED_HOST", "localhost")
+
 SYSTEM_MESSAGE = """
 You are a customer service AI agent designed to handle customer complaints and issues with patience and empathy. Your primary responsibilities are:
 
