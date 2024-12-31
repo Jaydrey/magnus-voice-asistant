@@ -1,5 +1,6 @@
 from typing import Any
 import os
+import logging
 import json
 import asyncio
 import base64
@@ -20,8 +21,11 @@ from .settings import (
     PORT,
     LOG_EVENT_TYPES,
     SYSTEM_MESSAGE,
-    VOICE
+    VOICE,
+    LOGGER_NAME,
 )
+
+logger = logging.getLogger(LOGGER_NAME)
 
 app = FastAPI()
 
@@ -32,6 +36,38 @@ async def index():
 
 @app.api_route("/incoming-call", methods=["GET", "POST"])
 async def handle_incoming_call(request: Request):
+    logger.info("Incoming call")
+
+    request_form_data ={}
+    request_query_params = {}
+    request_json = {}
+
+    try:
+        request_form_data = await request.form()
+        request_form_data = dict(request_form_data)
+    except Exception as e:
+        logger.exception("an error occurred while parsing form data")
+
+    try:
+        request_query_params = request.query_params
+        request_query_params = dict(request_query_params)
+    except Exception as e:
+        logger.exception("an error occurred while parsing query params")
+
+    try:
+        request_json = await request.json()
+        request_json = dict(request_json)
+    except Exception as e:
+        logger.exception("an error occurred while parsing json data")
+
+    twilio_params = {**request_form_data, **request_query_params, **request_json}
+
+    logger.info(f"Twilio params: {twilio_params}")
+
+    caller_number = twilio_params.get("From")
+    caller_city = twilio_params.get("FromCity")
+
+
     response = VoiceResponse()
     response.say(INITIAL_WAIT_MESSAGE)
     response.pause(length=1)
@@ -63,9 +99,10 @@ async def media_stream(websocket: WebSocket):
         OPENAI_REALTIME_API_URL,
         extra_headers=headers,
     ) as openai_ws:
-        # await send_session_update(openai_ws)
+        await send_session_update(openai_ws)
         stream_sid = None
 
+        # messages sent from twilio to open AI
         async def receive_from_twilio():
             nonlocal stream_sid
 
@@ -90,7 +127,8 @@ async def media_stream(websocket: WebSocket):
             except Exception as e:
                 print(f"Error receiving from Twilio: {e}")
                 return
-            
+        
+        # messages sent from open AI to twilio
         async def send_to_twilio():
             nonlocal stream_sid
             try:
@@ -143,6 +181,9 @@ async def send_session_update(openai_ws):
             "instructions": SYSTEM_MESSAGE,
             "modalities": ["text", "audio"],
             "temperature": 0.8,
+            "input_audio_transcription": {
+                "model": "whisper-1",
+            }
         },
         
     }
