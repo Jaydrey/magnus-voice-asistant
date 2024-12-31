@@ -25,6 +25,11 @@ from .settings import (
     LOGGER_NAME,
 )
 
+# utils
+from .utils import (
+    validate_twilio_request,
+)
+
 logger = logging.getLogger(LOGGER_NAME)
 
 app = FastAPI()
@@ -35,6 +40,7 @@ async def index():
 
 
 @app.api_route("/incoming-call", methods=["GET", "POST"])
+@validate_twilio_request
 async def handle_incoming_call(request: Request):
     logger.info("Incoming call")
 
@@ -83,6 +89,7 @@ async def handle_incoming_call(request: Request):
     return HTMLResponse(content=str(response), media_type="application/xml")
     
 @app.websocket("/media-stream")
+@validate_twilio_request
 async def media_stream(websocket: WebSocket):
     await websocket.accept()
     print("Connected to media stream")
