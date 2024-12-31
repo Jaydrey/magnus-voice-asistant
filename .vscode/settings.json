@@ -1,6 +1,12 @@
 {
     "cSpell.words": [
+        "adduser",
         "dotenv",
-        "twiml"
+        "levelname",
+        "magnus",
+        "PYTHONDONTWRITEBYTECODE",
+        "twiml",
+        "ulaw",
+        "venv"
     ]
 }
