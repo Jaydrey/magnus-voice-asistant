@@ -9,6 +9,8 @@ ENV_FILE = BASE_DIR / ".env"
 
 load_dotenv(ENV_FILE.as_posix())
 
+DEBUG = True
+
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
