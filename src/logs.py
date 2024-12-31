@@ -1,6 +1,6 @@
 import logging
 
-from .settings import (
+from settings import (
     LOG_FILENAME,
     LOGGER_NAME
 )

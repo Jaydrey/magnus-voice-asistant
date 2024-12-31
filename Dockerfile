@@ -26,5 +26,5 @@ USER magnus
 
 EXPOSE 8080
 
-CMD ["python", "src/main.py"]
+CMD ["fastapi", "dev", "src/main.py"]
 

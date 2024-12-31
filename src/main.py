@@ -6,19 +6,21 @@ import asyncio
 import base64
 import websockets
 
-from fastapi import FastAPI, WebSocket, Request, Response
+from fastapi import FastAPI, WebSocket, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.websockets import WebSocketDisconnect
 
-from twilio.twiml.voice_response import VoiceResponse, Connect, Say, Stream
+from twilio.twiml.voice_response import (
+    VoiceResponse, 
+    Connect, 
+)
 
 # settings
-from .settings import (
-    ALLOWED_HOST,
+
+from settings import (
     INITIAL_WAIT_MESSAGE,
     OPENAI_API_KEY,
     OPENAI_REALTIME_API_URL,
-    PORT,
     LOG_EVENT_TYPES,
     SYSTEM_MESSAGE,
     VOICE,
@@ -26,9 +28,10 @@ from .settings import (
 )
 
 # utils
-from .utils import (
+from utils import (
     validate_twilio_request,
 )
+from logs import logger as magnus_logger
 
 logger = logging.getLogger(LOGGER_NAME)
 
@@ -72,7 +75,7 @@ async def handle_incoming_call(request: Request):
 
     caller_number = twilio_params.get("From")
     caller_city = twilio_params.get("FromCity")
-
+    caller_sid = twilio_params.get("CallSid")
 
     response = VoiceResponse()
     response.say(INITIAL_WAIT_MESSAGE)
@@ -196,7 +199,6 @@ async def send_session_update(openai_ws):
     }
     await openai_ws.send(json.dumps(session_update))
     print("Sent session update")
-
 
 
 
