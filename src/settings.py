@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_FILE = BASE_DIR / ".env"
 
@@ -50,3 +51,10 @@ if LOG_EVENTS:
     ]
 
 OPENAI_REALTIME_API_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17"
+
+GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_FILE = BASE_DIR / "google-service-account.json"
+
+CUSTOMER_REPORT_SHEET_ID = os.getenv("CUSTOMER_REPORT_SHEET_ID")
+
+LOG_FILENAME = BASE_DIR / "logs.log"
+LOGGER_NAME = "magnus-ai"
