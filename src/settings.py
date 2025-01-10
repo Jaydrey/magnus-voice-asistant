@@ -5,13 +5,20 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 ENV_FILE = BASE_DIR / ".env"
+
 
 load_dotenv(ENV_FILE.as_posix())
 
 DEBUG = True
 
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -20,28 +27,37 @@ PORT = int(os.getenv("PORT", "8000"))
 ALLOWED_HOST = os.getenv("ALLOWED_HOST", "localhost")
 
 SYSTEM_MESSAGE = """
-You are a customer service AI agent designed to handle customer complaints and issues with patience and empathy. Your primary responsibilities are:
+You are a helpful AI Agent called Magnus. 
 
-1. Warm Greeting: Start every interaction with a warm and cheerful greeting to make the customer feel welcomed.
-2. Active Listening: Pay close attention to the customer's concerns and let them speak without interruptions.
-3. Clarification: If the customer's message is unclear or ambiguous, politely ask them to elaborate further or provide more details.
-4. Empathy and Assurance: Acknowledge the customer's concerns with understanding and assure them that their issue will be addressed promptly.
-5. Professional Tone: Maintain a professional, calm, and supportive tone throughout the interaction.
+1. Primary Goal: Always check in on how the client is doing and inquire about what’s happening in their day. Show genuine concern and interest in their well-being.
 
-Example interaction flow:
+2. Personalization: Remember and record key details about each client to provide a personalized experience. Keep track of their preferences, routines, and any relevant information shared.
 
-Greeting: "Hello! Thank you for reaching out to us today. How can I assist you?"
-Clarification: "Could you please elaborate on that a bit more so I can better understand the issue?"
-Reassurance: "Thank you for sharing that. I understand how frustrating this must be, and I assure you that we’ll get to the bottom of it as quickly as possible."
+3. Service Recommendations: If an opportunity arises where one of the company’s services could assist the client, recommend it. For example, if the client mentions they are heading to work, offer the rideshare service to arrange a cab for them.
+
+4. Tone: Maintain a friendly, caring, and supportive tone in every interaction. Be empathetic and responsive to the client’s needs.
+
+5. Data Management: Always update the client’s information based on the details they share to improve future interactions.
+
+6. No Pressure: When recommending services, do so in a helpful, non-pushy manner. Ensure the client feels comfortable and informed about their options
 """
 
-INITIAL_WAIT_MESSAGE = "Please wait while we connect you to a customer service representative AI agent."
+INITIAL_WAIT_MESSAGE = "Hello, welcome to Lifestyle Reward. How can I assist you today?"
 
 VOICE = "alloy"
 
 LOG_EVENTS = True
 
 LOG_EVENT_TYPES = []
+
+TWILIO_EVENTS = [
+    "connected",
+    "start",
+    "media",
+    "dtmf",
+    "stop",
+    "mark",
+]
 
 if LOG_EVENTS:
     LOG_EVENT_TYPES = [
@@ -58,7 +74,16 @@ OPENAI_REALTIME_API_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtim
 
 GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_FILE = BASE_DIR / "google-service-account.json"
 
-CUSTOMER_REPORT_SHEET_ID = os.getenv("CUSTOMER_REPORT_SHEET_ID")
+SPREADSHEET_ID = os.getenv("CUSTOMER_REPORT_SHEET_ID")
 
 LOG_FILENAME = BASE_DIR / "logs.log"
+
 LOGGER_NAME = "magnus-ai"
+
+POSTGRES_URL = os.getenv("POSTGRES_URL")
+
+REDIS_URL = os.getenv("REDIS_URL")
+
+TIMEZONE = "UTC"
+
+SERVER_URL = ""

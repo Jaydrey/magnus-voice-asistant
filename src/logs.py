@@ -1,6 +1,6 @@
 import logging
 
-from settings import (
+from .settings import (
     LOG_FILENAME,
     LOGGER_NAME
 )
@@ -14,4 +14,7 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(LOGGER_NAME)
+
+
+
 
